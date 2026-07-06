@@ -1,9 +1,33 @@
-:root {
+:root,
+:root[data-theme="light"] {
     --bg: #eceef0;
     --bg-2: #dfe2e5;
     --ink: #2b2f34;
     --ink-soft: #5c626a;
     --line: #c3c8ce;
+    /* Осветляющая вуаль поверх фоновой графики */
+    --veil-1: rgba(236, 238, 240, 0.72);
+    --veil-2: rgba(236, 238, 240, 0.55);
+    --veil-3: rgba(223, 226, 229, 0.62);
+    /* Кнопка переключения темы */
+    --btn-bg: rgba(255, 255, 255, 0.7);
+    --btn-border: rgba(43, 47, 52, 0.15);
+    --btn-ink: #2b2f34;
+}
+
+:root[data-theme="dark"] {
+    --bg: #17191c;
+    --bg-2: #0d0e10;
+    --ink: #e8eaed;
+    --ink-soft: #a3a9b1;
+    --line: #3a3f46;
+    /* Затемняющая вуаль поверх фоновой графики */
+    --veil-1: rgba(23, 25, 28, 0.68);
+    --veil-2: rgba(23, 25, 28, 0.5);
+    --veil-3: rgba(13, 14, 16, 0.6);
+    --btn-bg: rgba(255, 255, 255, 0.08);
+    --btn-border: rgba(232, 234, 237, 0.18);
+    --btn-ink: #e8eaed;
 }
 
 * {
@@ -27,6 +51,7 @@ body {
     overflow: hidden;
     position: relative;
     padding: 24px;
+    transition: background 0.4s ease, color 0.4s ease;
 }
 
 /* Фон с инженерными сетями */
@@ -45,17 +70,61 @@ body {
     filter: grayscale(1);
 }
 
-/* Осветляющая вуаль поверх фона для читаемости текста */
+/* Вуаль поверх фона для читаемости текста (адаптируется под тему) */
 .bg-overlay {
     position: absolute;
     inset: 0;
     background: radial-gradient(
         ellipse at center,
-        rgba(236, 238, 240, 0.72) 0%,
-        rgba(236, 238, 240, 0.55) 55%,
-        rgba(223, 226, 229, 0.62) 100%
+        var(--veil-1) 0%,
+        var(--veil-2) 55%,
+        var(--veil-3) 100%
     );
+    transition: background 0.4s ease;
 }
+
+/* Кнопка переключения темы */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--btn-ink);
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background 0.3s ease, border-color 0.3s ease,
+        color 0.3s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+    transform: rotate(-15deg) scale(1.05);
+}
+
+.theme-toggle:focus-visible {
+    outline: 2px solid var(--ink-soft);
+    outline-offset: 2px;
+}
+
+.theme-toggle svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* Показываем иконку действия: в светлой теме — луна, в тёмной — солнце */
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 
 /* Карточка с текстом */
 .card {
@@ -72,6 +141,7 @@ body {
     letter-spacing: 0.04em;
     line-height: 1.15;
     color: var(--ink);
+    transition: color 0.4s ease;
 }
 
 .name::after {
@@ -89,6 +159,7 @@ body {
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--ink-soft);
+    transition: color 0.4s ease;
 }
 
 @media (max-width: 520px) {
