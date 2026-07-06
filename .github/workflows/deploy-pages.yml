@@ -11,9 +11,11 @@ permissions:
   pages: write
   id-token: write
 
+# Ставим деплои в очередь (не отменяем), чтобы при частых пушах
+# публикации не конфликтовали и не падали с «Deployment failed».
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
